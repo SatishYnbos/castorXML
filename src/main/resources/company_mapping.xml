@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+	<class name="com.castor.model.Company">
+		<map-to xml="company" ns-uri="http://www.company.com/some.xsd"
+			ns-prefix="ns2" />
+		<field name="id" type="int">
+			<bind-xml name="id" node="attribute" />
+		</field>
+		<field name="product" type="com.castor.model.Product">
+			<bind-xml name="product" />
+		</field>
+		<field name="employees" type="com.castor.model.Employee"
+			collection="arraylist">
+			<bind-xml name="employee" node="element" location="employees"/>
+		</field>
+	</class>
+	<class name="com.castor.model.Product">
+		<field name="id" type="int">
+			<bind-xml name="id" />
+		</field>
+		<field name="name" type="string">
+			<bind-xml name="name" />
+		</field>
+	</class>
+	<class name="com.castor.model.Employee">
+		<field name="id" type="int">
+			<bind-xml name="id" />
+		</field>
+		<field name="name" type="string">
+			<bind-xml name="name" />
+		</field>
+		<field name="designation" type="string">
+			<bind-xml name="designation" />
+		</field>
+	</class>
+</mapping>
