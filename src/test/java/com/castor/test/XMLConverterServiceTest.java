@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  */
 public class XMLConverterServiceTest extends TestCase {
 	CompanyService service = new CompanyServiceImpl();
-	XMLConverterService converterService = new XMLConverterService();
+	XMLConverterService converterService = new XMLConverterServiceImpl();
 
 	public void testConvertFromObjectToXML() {
 		Company comp = service.establish();
