@@ -23,8 +23,8 @@ import com.castor.model.Company;
  * @author satish
  *
  */
-public class XMLConverterService {
-	
+public class XMLConverterServiceImpl implements XMLConverterService {
+
 	/**
 	 * This method will get the file from resources source folder by providing
 	 * the file name
@@ -39,7 +39,7 @@ public class XMLConverterService {
 
 	}
 
-	public void convertFromObjectToXML(Object obj, String filePath) {
+	private Mapping getMapping() {
 		/*
 		 * Creating mapping Object
 		 */
@@ -49,12 +49,21 @@ public class XMLConverterService {
 		 */
 		try {
 			mapping.loadMapping(getResource("company_mapping.xml"));
+		} catch (IOException | MappingException e) {
+			e.printStackTrace();
+		}
+		return mapping;
+	}
 
+	@Override
+	public void convertFromObjectToXML(Object obj, String outputFilePath) {
+
+		try {
 			/*
 			 * creating the writer Object with file name where we want to write
 			 * the parsed xml content
 			 */
-			Writer writer = new FileWriter(filePath);
+			Writer writer = new FileWriter(outputFilePath);
 			/*
 			 * creating the Marhaller Object to to marshall the given writer
 			 */
@@ -62,7 +71,7 @@ public class XMLConverterService {
 			/*
 			 * setting the mapping object to marshaller Object
 			 */
-			marshaller.setMapping(mapping);
+			marshaller.setMapping(getMapping());
 			marshaller.marshal(obj);
 			writer.close();
 		} catch (IOException | MappingException | MarshalException | ValidationException e) {
@@ -70,13 +79,14 @@ public class XMLConverterService {
 		}
 	}
 
+	@Override
 	public Object convertFromXMLToObject(String xmlFile) {
 
 		Company company = null;
-		/*
-		 * creating the reader Object to read the content from given file
-		 */
 		try {
+			/*
+			 * creating the reader Object to read the content from given file
+			 */
 			Reader reader = new FileReader(xmlFile);
 
 			/*
@@ -84,6 +94,10 @@ public class XMLConverterService {
 			 * UnMarshall
 			 */
 			Unmarshaller unmarshaller = new Unmarshaller(Company.class);
+			/*
+			 * setting the mapping object to UnMarshaller Object
+			 */
+			unmarshaller.setMapping(getMapping());
 			/*
 			 * UnMarhalling the given XMl file
 			 */
@@ -93,7 +107,7 @@ public class XMLConverterService {
 			 */
 			reader.close();
 
-		} catch (IOException | MarshalException | ValidationException e) {
+		} catch (IOException | MappingException | MarshalException | ValidationException e) {
 			e.printStackTrace();
 
 		}
