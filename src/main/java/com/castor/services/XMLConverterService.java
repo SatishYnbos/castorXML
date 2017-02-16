@@ -16,9 +16,9 @@ public interface XMLConverterService {
 	 * configuration file
 	 * 
 	 * @param obj
-	 * @param filePath
+	 * @param outputFile
 	 */
-	public File convertFromObjectToXML(Object obj, File outputFilePath);
+	public File convertFromObjectToXML(Object obj, File outputFile);
 
 	/**
 	 * This method will parse given XML file to the java Object
