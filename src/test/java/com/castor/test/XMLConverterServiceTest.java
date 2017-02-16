@@ -27,12 +27,28 @@ public class XMLConverterServiceTest extends TestCase {
 	CompanyService service = new CompanyServiceImpl();
 	XMLConverterService converterService = new XMLConverterServiceImpl();
 
-	public void testConvertFromObjectToXML() {
+	public void testParsing() {
+		/**
+		 * Getting The Company Object
+		 */
 		Company companyToConvert = service.establish();
+		/**
+		 * parsing object to xml
+		 */
 		File ouputFile = converterService.convertFromObjectToXML(companyToConvert,
 				ResourceUtil.getResource("com/castor/resources/test/company.xml"));
+		/**
+		 * parsing xml to object
+		 */
 		Company company = (Company) converterService.convertFromXMLToObject(ouputFile);
+		/**
+		 * converting the given file to xml document
+		 */
 		Document xmlDoc = ResourceUtil.convertFileToDocument(ouputFile);
+		/**
+		 * getting elements from the Marshalled xml document and performing the
+		 * assertions with UnMarshalled company Object -- STARTED
+		 */
 		Element cmpElement = xmlDoc.getDocumentElement();
 		assertEquals(Integer.parseInt(cmpElement.getAttribute("id")), company.getId());
 		NodeList cmpChildNodes = cmpElement.getChildNodes();
