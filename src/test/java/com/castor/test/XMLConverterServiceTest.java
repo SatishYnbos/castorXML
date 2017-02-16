@@ -3,11 +3,19 @@
  */
 package com.castor.test;
 
+import java.io.File;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.castor.model.Company;
 import com.castor.services.CompanyService;
 import com.castor.services.CompanyServiceImpl;
 import com.castor.services.XMLConverterService;
 import com.castor.services.XMLConverterServiceImpl;
+import com.castor.util.ResourceUtil;
 
 import junit.framework.TestCase;
 
@@ -20,15 +28,31 @@ public class XMLConverterServiceTest extends TestCase {
 	XMLConverterService converterService = new XMLConverterServiceImpl();
 
 	public void testConvertFromObjectToXML() {
-		Company company1 = service.establish();
-		converterService.convertFromObjectToXML(company1, "F:/Satish/softwares/Castor/company.xml");
-		Company company2 = (Company) converterService.convertFromXMLToObject("F:/Satish/softwares/Castor/input.xml");
-		assertEquals(company1, company2);
-	}
-
-	public void tstConvertFromXMLToObject() {
-		Company company = (Company) converterService.convertFromXMLToObject("F:/Satish/softwares/Castor/input.xml");
-		System.out.println(company);
-		assertTrue(true);
+		Company companyToConvert = service.establish();
+		File ouputFile = converterService.convertFromObjectToXML(companyToConvert,
+				ResourceUtil.getResource("com/castor/resources/test/company.xml"));
+		Company company = (Company) converterService.convertFromXMLToObject(ouputFile);
+		Document xmlDoc = ResourceUtil.convertFileToDocument(ouputFile);
+		Element cmpElement = xmlDoc.getDocumentElement();
+		assertEquals(Integer.parseInt(cmpElement.getAttribute("id")), company.getId());
+		NodeList cmpChildNodes = cmpElement.getChildNodes();
+		Node productNode = cmpChildNodes.item(0);
+		NodeList prdChildList = productNode.getChildNodes();
+		Node prdId = prdChildList.item(0);
+		assertEquals(Integer.parseInt(prdId.getTextContent()), company.getProduct().getId());
+		Node prdname = prdChildList.item(1);
+		assertEquals(prdname.getTextContent(), company.getProduct().getName());
+		Node empsNode = cmpChildNodes.item(1);
+		NodeList empschilds = empsNode.getChildNodes();
+		for (int i = 0; i < empschilds.getLength(); i++) {
+			Node empNode = empschilds.item(i);
+			NodeList empChilds = empNode.getChildNodes();
+			Node empId = empChilds.item(0);
+			Node empName = empChilds.item(1);
+			Node empDesg = empChilds.item(2);
+			assertEquals(Integer.parseInt(empId.getTextContent()), company.getEmployees().get(i).getId());
+			assertEquals(empName.getTextContent(), company.getEmployees().get(i).getName());
+			assertEquals(empDesg.getTextContent(), company.getEmployees().get(i).getDesignation());
+		}
 	}
 }

@@ -18,26 +18,13 @@ import org.exolab.castor.xml.Unmarshaller;
 import org.exolab.castor.xml.ValidationException;
 
 import com.castor.model.Company;
+import com.castor.util.ResourceUtil;
 
 /**
  * @author satish
  *
  */
 public class XMLConverterServiceImpl implements XMLConverterService {
-
-	/**
-	 * This method will get the file from resources source folder by providing
-	 * the file name
-	 * 
-	 * @param fileName
-	 * @return
-	 */
-	private String getResource(String fileName) {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource(fileName).getFile());
-		return file.toString();
-
-	}
 
 	private Mapping getMapping() {
 		/*
@@ -48,7 +35,7 @@ public class XMLConverterServiceImpl implements XMLConverterService {
 		 * loading the mapping file explicitly to the mapping Object
 		 */
 		try {
-			mapping.loadMapping(getResource("company_mapping.xml"));
+			mapping.loadMapping(ResourceUtil.getResource("company_mapping.xml").toString());
 		} catch (IOException | MappingException e) {
 			e.printStackTrace();
 		}
@@ -56,14 +43,13 @@ public class XMLConverterServiceImpl implements XMLConverterService {
 	}
 
 	@Override
-	public void convertFromObjectToXML(Object obj, String outputFilePath) {
-
+	public File convertFromObjectToXML(Object obj, File outputFile) {
 		try {
 			/*
 			 * creating the writer Object with file name where we want to write
 			 * the parsed xml content
 			 */
-			Writer writer = new FileWriter(outputFilePath);
+			Writer writer = new FileWriter(outputFile);
 			/*
 			 * creating the Marhaller Object to to marshall the given writer
 			 */
@@ -77,10 +63,11 @@ public class XMLConverterServiceImpl implements XMLConverterService {
 		} catch (IOException | MappingException | MarshalException | ValidationException e) {
 			e.printStackTrace();
 		}
+		return outputFile;
 	}
 
 	@Override
-	public Object convertFromXMLToObject(String xmlFile) {
+	public Object convertFromXMLToObject(File xmlFile) {
 
 		Company company = null;
 		try {

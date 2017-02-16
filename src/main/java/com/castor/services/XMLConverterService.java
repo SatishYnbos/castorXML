@@ -3,6 +3,8 @@
  */
 package com.castor.services;
 
+import java.io.File;
+
 /**
  * @author satish
  *
@@ -16,7 +18,7 @@ public interface XMLConverterService {
 	 * @param obj
 	 * @param filePath
 	 */
-	public void convertFromObjectToXML(Object obj, String outputFilePath);
+	public File convertFromObjectToXML(Object obj, File outputFilePath);
 
 	/**
 	 * This method will parse given XML file to the java Object
@@ -24,5 +26,5 @@ public interface XMLConverterService {
 	 * @param xmlFile
 	 * @return
 	 */
-	public Object convertFromXMLToObject(String xmlFile);
+	public Object convertFromXMLToObject(File xmlFile);
 }
